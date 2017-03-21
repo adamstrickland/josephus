@@ -1,12 +1,12 @@
 package com.adamstrickland.josephus
 
 object Josephus {
-  object One {
-    def unapply(i: Int) = if (i == 1) Some(1) else None
-  }
+  case class Args(n: Int, k: Int)
 
-  def solve(n: Int, k: Int): java.lang.Integer = n match {
-    case One(n) => 0
-    case _ => (solve(n - 1, k) + k) % n
+  def solve(n: Int, k: Int): java.lang.Integer = Args(n, k) match {
+    case Args(0, _) => throw new Exception("No group")
+    case Args(_, 0) => throw new Exception("No interval")
+    case Args(1, _) => 1
+    case _ => (solve(n - 1, k) + k - 1) % n + 1
   }
 }
