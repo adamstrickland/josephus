@@ -14,6 +14,14 @@ Use `sbt run`
 ```bash
 sbt "run n k"
 ```
+
+### In Code
+
+```scala
+import com.adamstrickland.josephus._
+Josephus.solve(7, 3) // 4
+```
+
 ## Running Tests
 
 ```bash
