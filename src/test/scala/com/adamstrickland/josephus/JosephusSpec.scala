@@ -10,38 +10,48 @@ class JosephusSpec extends Specification {
 
   Note that the position returned is 1-indexed.
 
-    If n = 7 and k = 3, the answer should be 4                        $c0
+    If n = 7 and k = 3, the safe spot is 4                            $c0
 
     When bad parameters are supplied:
+      If n is not a number, bail out                                  $t0
+      If k is not a number, bail out                                  $t1
       If n is 0, there is no group; throw                             $t2
       If k is 0, there is no interval; throw                          $t3
 
     For a 3-person circle:
-      Killing every 2nd should result in position 3                   $s0
+      Killing every 2nd, the safe spot is 3                           $s0
 
     For a 5-person circle:
-      Killing every 1st should result in position 5                   $s1
-      Killing every 2nd should result in position 3                   $s2
-      Killing every 3rd should result in position 4                   $s3
-      Killing every 4th should result in position 1                   $s4
-      Killing every 5th should result in position 2                   $s5
+      Killing every 1st, the safe spot is 5                           $s1
+      Killing every 2nd, the safe spot is 3                           $s2
+      Killing every 3rd, the safe spot is 4                           $s3
+      Killing every 4th, the safe spot is 1                           $s4
+      Killing every 5th, the safe spot is 2                           $s5
 
     When n == k:
-      For a 3-person circle, the result should be 2                   $q0
-      For a 4-person circle, the result should be 2                   $q1
-      For a 5-person circle, the result should be 2                   $q2
-      For a 6-person circle, the result should be 4                   $q3
-      For a 7-person circle, the result should be 5                   $q4
-      For a 8-person circle, the result should be 4                   $q5
+      For a 3-person circle, the safe spot is 2                       $q0
+      For a 4-person circle, the safe spot is 2                       $q1
+      For a 5-person circle, the safe spot is 2                       $q2
+      For a 6-person circle, the safe spot is 4                       $q3
+      For a 7-person circle, the safe spot is 5                       $q4
+      For a 8-person circle, the safe spot is 4                       $q5
 
     The classic problem is from the myth:
-      If there were 40 men and an interval of 7, the save spot is 24  $m1
-      If there were 41 men and an interval of 7, the save spot is 31  $m2
-      If there were 41 men and an interval of 5, the save spot is 21  $m3
+      For a 40-man circle and killing every 7th, the safe spot is 24  $m1
+      For a 41-man circle and killing every 7th, the safe spot is 31  $m2
+      For a 41-man circle and killing every 5th, the safe spot is 21  $m3
+      For a 41-man circle and killing every 3rd, the safe spot is 31  $m4
 
+    Generically solves the explicit k=2 formula:
+      For a 99-person circle                                          $k0
+      For a 137-person circle                                         $k1
   """
+  def kEqualsTwo = (n: Int) => (2 * (n - Integer.highestOneBit(n)) + 1)
+
   def c0 = Josephus.solve(7, 3) mustEqual(4)
 
+  def t0 = Josephus.solve("a", "2") must throwA[Exception]
+  def t1 = Josephus.solve("7", "a") must throwA[Exception]
   def t2 = Josephus.solve(0, 2) must throwA[Exception]
   def t3 = Josephus.solve(2, 0) must throwA[Exception]
 
@@ -63,4 +73,8 @@ class JosephusSpec extends Specification {
   def m1 = Josephus.solve(40, 7) mustEqual(24)
   def m2 = Josephus.solve(41, 7) mustEqual(31)
   def m3 = Josephus.solve(41, 5) mustEqual(21)
+  def m4 = Josephus.solve(41, 3) mustEqual(31)
+
+  def k0 = Josephus.solve(99, 2) mustEqual kEqualsTwo(99)
+  def k1 = Josephus.solve(137, 2) mustEqual kEqualsTwo(137)
 }
